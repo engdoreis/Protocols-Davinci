@@ -1,5 +1,5 @@
 /**
- * @file    TPHelper.c
+ * @file    Helper.c
  * @author  Douglas Reis
  * @date    07/07/2014
  * @version 1.0
@@ -9,14 +9,11 @@
  *
  * @section DESCRIPTION
  *
- *
  */
 
 #include "Helper.h"
 
-#include "../Helper/Hash/CRC/CRC16.h"
-
-
+#include "../Hash/CRC/CRC16.h"
 
 bool TPSendFrame(TP_Context *context, const Frame *frame)
 {
@@ -38,14 +35,14 @@ bool TPSendFrame(TP_Context *context, const Frame *frame)
 	return false;
 }
 
-static uint16_t TPSum(uint16_t start, const void * data, uint32_t size)
-{
-	for(int i = 0; i < size; i++)
-	{
-		start += ((uint8_t *)data)[i];
-	}
-	return start;
-}
+//static uint16_t TPSum(uint16_t start, const void * data, uint32_t size)
+//{
+//	for(int i = 0; i < size; i++)
+//	{
+//		start += ((uint8_t *)data)[i];
+//	}
+//	return start;
+//}
 
 bool TPIsValidCRC(const Frame *frame)
 {
@@ -53,8 +50,10 @@ bool TPIsValidCRC(const Frame *frame)
 
 	uint16_t crc = 0;
 
-	crc = TPSum(crc, &frame->size, TP_STARTING_FRAME_SIZE - 2);
-	crc = TPSum(crc, frame->data, _size);
+//	crc = TPSum(crc, frame, TP_STARTING_FRAME_SIZE);
+	crc = TP_CRC16((uint8_t *)frame, TP_STARTING_FRAME_SIZE);
+//	crc = TPSum(crc, frame->data, _size);
+	crc = TP_CRC16Add((uint8_t *)frame->data, _size, crc);
 
 	crc = ~crc;
 	uint16_t _crc = GET_LITTLE_ENDIAN_INT16(frame->crc);
@@ -72,8 +71,10 @@ void TPCalculateCRC(Frame *frame)
 
 	uint32_t crc = 0;
 
-	crc = TPSum(crc, &frame->size, TP_STARTING_FRAME_SIZE - 2);
-	crc = TPSum(crc, frame->data, _size);
+	//	crc = TPSum(crc, frame, TP_STARTING_FRAME_SIZE);
+		crc = TP_CRC16((uint8_t *)frame, TP_STARTING_FRAME_SIZE);
+	//	crc = TPSum(crc, frame->data, _size);
+		crc = TP_CRC16Add((uint8_t *)frame->data, _size, crc);
 
 	SET_LITTLE_ENDIAN_INT16(~crc,frame->crc);
 }

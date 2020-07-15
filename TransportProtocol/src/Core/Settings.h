@@ -25,6 +25,7 @@
 	#define EDE_CALLBACK
 #endif
 
+#define __SHORT_ENUM__ __attribute__ ((__packed__))
 
 #define TP_COMMAND_AMOUNT		40
 #define TP_COMMAND_UNSUPPORTED	0

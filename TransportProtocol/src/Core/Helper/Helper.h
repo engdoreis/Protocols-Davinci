@@ -17,7 +17,7 @@
 
 #include <string.h>
 
-#include "../ProtocolLayer/Context.h"
+#include "../Type/Context.h"
 #include "../Settings.h"
 
 #define TP_ArrayToInt32(TPArray)			(uint32_t)((TPArray[0] << 24) | (TPArray[1] << 16) | (TPArray[2] << 8) | (TPArray[3] & 0xFF))
@@ -34,6 +34,8 @@
 
 
 /*!
+ * @internal
+ * @private
  * Metodo auxiliar para verificar se e comando de escrita.
  *
  * @param value Valor recebido do codigo do comando.
@@ -42,6 +44,7 @@
 bool TPIsWriteCommand(uint8_t value);
 
 /*!
+ * @internal
  * Metodo auxiliar para envio do comando solicitado.
  *
  * @param frame Referencia da estrutura do comando.
@@ -50,6 +53,7 @@ bool TPIsWriteCommand(uint8_t value);
 bool TPSendFrame(TP_Context *context, const Frame *frame);
 
 /*!
+ * @internal
  * Funcao para verificar se o comando/resposta esta integro.
  *
  * @param Referencia do comando/resposta para verificacao.
@@ -58,6 +62,7 @@ bool TPSendFrame(TP_Context *context, const Frame *frame);
 bool TPIsValidCRC(const Frame *frame);
 
 /*!
+ * @internal
  *
  * @param frame
  * @param array
@@ -65,6 +70,7 @@ bool TPIsValidCRC(const Frame *frame);
 void TPParseArrayToFrame(Frame *frame, uint8_t *array);
 
 /*!
+ * @internal
  * Funcao para calculo e concatenacao do valor de CRC16 ao frame do comando/resposta.
  *
  * @param Referencia do comando/resposta para o calculo do CRC16.
@@ -72,6 +78,7 @@ void TPParseArrayToFrame(Frame *frame, uint8_t *array);
 void TPCalculateCRC(Frame *frame);
 
 /*!
+ * @internal
  *
  * @param context
  * @return

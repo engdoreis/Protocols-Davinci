@@ -78,6 +78,18 @@ $(EXTRACTED_OBJ_DIR)%.a: $(LIB_DIR)%.a
 	cd $(@D);$(AR) -x $(@F);mv *.o -t 2>/dev/null || :
 	rm -f $@
 
+
+test: static servertest clienttest
+	py test/AutoTest.py $(BUILD_DIR)/servertest.exe $(BUILD_DIR)/clienttest.exe
+
+servertest: test/src/Server.c test/src/Porting.c test/src/circular_buffer.c
+	@echo "Generating $@..."
+	@$(CC) $(CFLAGS) $^ -o $(BUILD_DIR)/$@.exe $(INCFLAGS) $(BUILD_DIR)/lib$(TARGET_NAME).a
+
+clienttest: test/src/Client.c test/src/Porting.c test/src/circular_buffer.c
+	@echo "Generating $@..."
+	@$(CC) $(CFLAGS) $^ -o $(BUILD_DIR)/$@.exe $(INCFLAGS) $(BUILD_DIR)/lib$(TARGET_NAME).a
+	
 clean:
 	$(RM) $(BUILD_DIR)/
 	

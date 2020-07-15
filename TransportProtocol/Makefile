@@ -46,6 +46,7 @@ OBJ           := $(OBJ:.c=.o)
 INCFLAGS      := $(addprefix -I, $(INCDIRS)) 
 
 CFLAGS        += -Wall -Werror -fdata-sections -ffunction-sections
+LDFLAGS       :=
 
 .PHONY: clean static help
 
@@ -62,6 +63,17 @@ $(BUILD_DIR)/%.o: %.c
 	@echo "Compiling $@..."
 	@$(CC) $(CFLAGS) -c $< -o $@ $(INCFLAGS)	
 
+test: static servertest clienttest
+	py test/AutoTest.py $(BUILD_DIR)/servertest.exe $(BUILD_DIR)/clienttest.exe
+
+servertest: test/src/Server.c test/src/Porting.c test/src/circular_buffer.c
+	@echo "Generating $@..."
+	@$(CC) $(CFLAGS) $^ -o $(BUILD_DIR)/$@.exe $(INCFLAGS) $(BUILD_DIR)/lib$(TARGET_NAME).a
+
+clienttest: test/src/Client.c test/src/Porting.c test/src/circular_buffer.c
+	@echo "Generating $@..."
+	@$(CC) $(CFLAGS) $^ -o $(BUILD_DIR)/$@.exe $(INCFLAGS) $(BUILD_DIR)/lib$(TARGET_NAME).a
+	
 clean:
 	$(RM) $(BUILD_DIR)/
 	

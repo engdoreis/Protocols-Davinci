@@ -7,7 +7,7 @@
 #include "Service.h"
 
 
-bool TP_Init(TP_Obj *obj, TPDriver *driver, ITPCallback callback, void *param, uint32_t timeout, uint8_t *buffer, uint32_t size)
+bool TP_Init(TP_Obj *obj, TP_Driver *driver, ITPCallback callback, void *param, const void * port, uint32_t timeout, uint8_t *buffer, uint32_t size)
 {
 	TP_ASSERT(obj == NULL || driver == NULL || driver->Open == NULL || driver->Read == NULL || driver->Write == NULL || driver->Close == NULL || buffer == NULL);
 
@@ -18,8 +18,9 @@ bool TP_Init(TP_Obj *obj, TPDriver *driver, ITPCallback callback, void *param, u
 	offset += sizeof(TP_Context);
 	TP_ASSERT(offset >= size);
 
-	memcpy(&context->driver, driver, sizeof(TPDriver));
+	memcpy(&context->driver, driver, sizeof(TP_Driver));
 
+	context->port = port;
 	context->control.timeoutConfig = timeout;
 
 	context->command.data = buffer + offset;
@@ -32,7 +33,7 @@ bool TP_Init(TP_Obj *obj, TPDriver *driver, ITPCallback callback, void *param, u
 	context->response.data = buffer + offset;
 
 	offset += context->control.size;
-	TP_ASSERT(offset >= size);
+	TP_ASSERT(offset > size);
 
 	context->callback = callback;
 	context->param = param;
@@ -75,7 +76,7 @@ void TP_Process(TP_Obj *obj)
 {
 	TP_Context *context = obj->handle;
 	TPResetContext(context);
-	memset(&context->response, 0, sizeof(Frame));
+	memset(&context->response, 0, TP_STARTING_FRAME_SIZE);
 
 	context->control.timeout = context->driver.Tick();
 	context->control.bytesRead = 0;

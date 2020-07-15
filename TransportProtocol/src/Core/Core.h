@@ -24,12 +24,11 @@ typedef void (EDE_CALLBACK *TPGetMethod)(void *buffer, uint16_t parameter, uint8
 typedef void (EDE_CALLBACK *TPSetMethod)(const void *data, uint16_t parameter, uint8_t size);
 
 #include "Helper/Helper.h"
-#include "ProtocolLayer/State.h"
+#include "States/State.h"
 
-
-/* Stubs */
 
 /*!
+ * @internal
  * Prototype to calculate hash CRC16 Modbus.
  *
  * @param data Data buffer used to calculate hash value.
@@ -40,6 +39,7 @@ typedef void (EDE_CALLBACK *TPSetMethod)(const void *data, uint16_t parameter, u
 //uint16_t TPGetCRC16(uint8_t *data, uint32_t size);
 
 /*!
+ * @internal
  * Stub used to get timestamp from device.
  *
  * @param value Timestamp value.

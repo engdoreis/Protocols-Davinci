@@ -1,8 +1,11 @@
+///@cond
 /**
  * @file   TPService.h
- * @Author Douglas Reis
+ * @author Douglas Reis
  * @date   02/10/2014
  * @brief  Brief description of file.
+ * @private
+ * @internal
  *
  * Detailed description of file.
  */
@@ -12,7 +15,7 @@
 
 #include "../Core/Core.h"
 #include "../Core/Helper/Helper.h"
-#include "../Core/ProtocolLayer/Context.h"
+#include "../Core/Type/Context.h"
 
 
 #ifdef __cplusplus
@@ -24,15 +27,46 @@ typedef struct
 	void *handle;
 }TP_Obj;
 
-bool TP_Init(TP_Obj *obj, TPDriver *driver, ITPCallback callback, void *param, uint32_t timeout, uint8_t *buffer, uint32_t size);
+/*!
+ * @private
+ * @internal 
+ * @brief Tp init
+ *
+ * @param obj
+ * @param driver
+ * @param callback
+ * @param param
+ * @param port
+ * @param timeout
+ * @param buffer
+ * @param size
+ * @return
+ */
+bool TP_Init(TP_Obj *obj, TP_Driver *driver, ITPCallback callback, void *param,const void * port, uint32_t timeout, uint8_t *buffer, uint32_t size);
 
+/*!
+ * @internal
+ * @private  
+ *
+ * @param obj
+ * @param address
+ * @param payload
+ * @param size
+ * @return
+ */
 bool TP_Send(TP_Obj *obj, uint8_t address, const uint8_t *payload, uint32_t size);
 
+/*!
+ * @internal
+ * @private  
+ *
+ * @param obj
+ */
 void TP_Process(TP_Obj *obj);
 
 #ifdef __cplusplus
 }
 #endif
 
-
+///@endcond
 #endif /* TPSERVICE_H_ */
