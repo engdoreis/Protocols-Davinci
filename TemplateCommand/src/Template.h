@@ -22,6 +22,82 @@
 #include "StatusCode.h"
 /*!
  * @defgroup API
+ * 
+ * @par Server example
+ * @code{.cpp}
+void Command(void *param, uint8_t address, T_Frame *data)
+{	
+	switch(data->id)
+	{
+	case T_Cmd1:
+	{
+		st_cmd1 cmd1;
+		cmd1.field1 = data->payload.cmd1.field1 + 1;
+		cmd1.field2 = data->payload.cmd1.field2 + 2;
+		T_Response1(param, T_OK, &cmd1);
+	}break;
+	case T_Cmd2:
+	{
+		T_Response2(param, T_NotSupportedError, NULL);
+	}break;
+	default:
+		break;
+	}
+}
+
+void Event(void *param, uint8_t address, T_Frame *data)
+{
+	//Do something
+}
+
+int main (int argc, char** argv)
+{
+	uint8_t buffer[512];
+	int timeout;
+	T_Obj obj;
+	
+	bool ret = T_Init(&obj, "COM3", &driver, buffer, sizeof(buffer));
+	if (!ret)
+		goto exit;
+
+	ret = T_RegisterCommandCallback(&obj, Command, &obj);
+	ret = T_RegisterEventCallback(&obj, Event, &obj);
+
+	timeout = SYS_Tick() + TIMEOUT;
+	while(timeout > SYS_Tick())
+	{
+		ret = T_Run(&obj);
+	}
+
+	exit:
+	return 0;
+}
+ * @endcode
+ * 
+ * @par Client example
+ * @code{.cpp}
+  *
+int main (int argc, char** argv)
+{
+	uint8_t buffer[512];
+	int timeout;
+	T_Obj obj;
+	st_cmd1 in, out
+	
+	bool ret = T_Init(&obj, "COM3", &driver, buffer, sizeof(buffer));
+	if (!ret)
+		goto exit;
+	
+	in.field1 = 0;
+	in.field2 = 20;
+	T_Command1(&test.obj, &in, &out)
+
+	printf("%d %d", out.field1, out.field2)
+
+	exit:
+	return 0;
+}
+ * @endcode
  */
 
 
