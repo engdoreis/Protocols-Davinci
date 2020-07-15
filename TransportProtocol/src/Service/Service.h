@@ -1,4 +1,3 @@
-///@cond
 /**
  * @file   TPService.h
  * @author Douglas Reis
@@ -68,5 +67,4 @@ void TP_Process(TP_Obj *obj);
 }
 #endif
 
-///@endcond
 #endif /* TPSERVICE_H_ */

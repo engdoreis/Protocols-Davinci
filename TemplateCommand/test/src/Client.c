@@ -108,7 +108,7 @@ void Event(void *param, uint8_t address, T_Frame *data)
 int main (int argc, char** argv)
 {
 
-	uint8_t buffer[1024];
+	uint8_t buffer[512];
 	size_t size;
 	ClassTest test =
 	{

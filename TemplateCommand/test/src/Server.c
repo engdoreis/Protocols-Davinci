@@ -77,7 +77,7 @@ void Event(void *param, uint8_t address, T_Frame *data)
 int main (int argc, char** argv)
 {
 
-	uint8_t buffer[2048];
+	uint8_t buffer[512];
 	ClassServerTest test =
 	{
 			.running = true,

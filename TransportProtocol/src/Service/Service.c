@@ -23,16 +23,10 @@ bool TP_Init(TP_Obj *obj, TP_Driver *driver, ITPCallback callback, void *param, 
 	context->port = port;
 	context->control.timeoutConfig = timeout;
 
-	context->command.data = buffer + offset;
-	context->control.size = (size - offset) / 2;
-
-	offset += context->control.size;
-	TP_ASSERT(offset >= size);
-
-	context->control.maxPayloadSize = context->control.size;
+	context->control.maxPayloadSize = (size - offset);
 	context->response.data = buffer + offset;
 
-	offset += context->control.size;
+	offset += context->control.maxPayloadSize;
 	TP_ASSERT(offset > size);
 
 	context->callback = callback;
@@ -54,12 +48,9 @@ bool TP_Send(TP_Obj *obj, uint8_t address, const uint8_t *payload, uint32_t size
 	TP_Context *context = obj->handle;
 	TPResetContext(context);
 
-	if(size > context->control.size)
-		return false;
-
 	context->driver.Flush(context->control.handle);
 
-	memcpy(context->command.data, payload, size);
+	context->command.data = (uint8_t*)payload;
 
 	SET_STX(context->command.stx);
 	TP_Int16ToArray(size, context->command.size);
