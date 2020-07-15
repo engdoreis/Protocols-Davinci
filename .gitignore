@@ -3,3 +3,4 @@
 *.stackdump
 */~build/
 doc/
+*.7z
