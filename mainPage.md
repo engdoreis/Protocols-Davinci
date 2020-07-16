@@ -16,11 +16,13 @@ The protocol is difived in two layers described below.
     Over the Tranporte Layer, there's the Enlace Layer whitch is responsable for elaborate the functions for each packet.
 ## Transport Layer
    @copydoc transportFrame
+   @image html Protocols-TransportProtocol.jpg "Transport Flow"
 
 ## Enlace Layer
    @copydoc PacketFrame
    @copydoc PacketType
    @copydoc StatusCode
+   @image html Protocols-EnlaceProtocol.jpg "Enlace Flow"
 
 ## Command/Response list   
    @copydoc Commands

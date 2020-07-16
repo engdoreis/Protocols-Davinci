@@ -17,4 +17,4 @@ command:
 	@cd TemplateCommand && $(MAKE) clean static PROFILE=debug CPU=x86
 doc:
 	@printf "\nBuilding documentation...\n"
-	@$(DOXYGEN) doxygen/Doxyfile
+	@cd doxygen && $(DOXYGEN) Doxyfile
