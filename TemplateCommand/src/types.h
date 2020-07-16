@@ -22,6 +22,12 @@
 #endif
 #endif
 
+
+struct T_PacketHandler
+{
+	T_Callback handler;
+	void * arg;
+};
 /*!
  * @internal
  * @private
@@ -29,12 +35,7 @@
 typedef struct
 {
 	TP_Obj * tp;
-	T_Callback eventCallback;
-	void * eventArg;
-	T_Callback commandCallback;
-	void * commandArg;
-	T_Callback responseCallback;
-	void * responseArg;
+	struct T_PacketHandler handlerTable[T_FrameCount];
 	T_Frame * frame;
 	uint32_t payloadSize;
 	uint8_t transferSeq;

@@ -28,22 +28,12 @@ void TP_Callback(void *param, uint8_t address, uint16_t size, uint8_t *payload)
 
 	if(!ctx->waitingResponse || ctx->frame->type == T_FrameEvent)
 	{
-		switch(ctx->frame->type)
+		if(ctx->frame->type < T_FrameCount)
 		{
-		case T_FrameCommand:
-			if(ctx->commandCallback)
-				ctx->commandCallback(ctx->commandArg, address, ctx->frame);
-			break;
-		case T_FrameResponse:
-			if(ctx->responseCallback)
-				ctx->responseCallback(ctx->responseArg, address, ctx->frame);
-			break;
-		case T_FrameEvent:
-			if(ctx->eventCallback)
-				ctx->eventCallback(ctx->eventArg, address, ctx->frame);
-			break;
-		default:
-			break;
+			if(ctx->handlerTable[ctx->frame->type].handler)
+			{
+				ctx->handlerTable[ctx->frame->type].handler(ctx->handlerTable[ctx->frame->type].arg, address, ctx->frame);
+			}
 		}
 	}
 
@@ -69,7 +59,7 @@ bool T_Init(T_Obj *obj, const void *port, T_Driver *driver, uint8_t * buffer, ui
 	offset += sizeof(TP_Obj);
 	TP_ASSERT(offset >= size);
 
-	ctx->eventCallback = ctx->commandCallback = ctx->responseCallback = NULL;
+	memset(&ctx->handlerTable, 0, sizeof(ctx->handlerTable));
 
 	bool ret = TP_Init(ctx->tp, (TP_Driver *)driver, TP_Callback, ctx, port, 2000, buffer + offset, size - offset);
 	if(ret)
@@ -87,8 +77,8 @@ bool T_RegisterEventCallback(T_Obj *obj, T_Callback callback, void *arg)
 	T_Context * ctx = obj->handle;
 	if(obj && callback)
 	{
-		ctx->eventCallback = callback;
-		ctx->eventArg = arg;
+		ctx->handlerTable[T_FrameEvent].handler = callback;
+		ctx->handlerTable[T_FrameEvent].arg = arg;
 		ret = true;
 	}
 	return ret;
@@ -100,8 +90,8 @@ bool T_RegisterCommandCallback(T_Obj *obj, T_Callback callback, void *arg)
 	T_Context * ctx = obj->handle;
 	if(obj && callback)
 	{
-		ctx->commandCallback = callback;
-		ctx->commandArg = arg;
+		ctx->handlerTable[T_FrameCommand].handler = callback;
+		ctx->handlerTable[T_FrameCommand].arg = arg;
 		ret = true;
 	}
 	return ret;
@@ -113,8 +103,8 @@ bool T_RegisterResponseCallback(T_Obj *obj, T_Callback callback, void *arg)
 	T_Context * ctx = obj->handle;
 	if(obj && callback)
 	{
-		ctx->responseCallback = callback;
-		ctx->responseArg = arg;
+		ctx->handlerTable[T_FrameResponse].handler = callback;
+		ctx->handlerTable[T_FrameResponse].arg = arg;
 		ret = true;
 	}
 	return ret;

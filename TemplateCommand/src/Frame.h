@@ -58,6 +58,7 @@ typedef enum __SHORT_ENUM__
 	T_FrameCommand  = 0,  /*!< The master of the communication will send COMMANDs the slayer requesting actions or informations.*/
 	T_FrameResponse = 1,  /*!< The slayer of the communication will reply to master COMMANDs with RESPONSE.                       */
 	T_FrameEvent    = 2,  /*!< The slayer of the communication can send EVENTs to the master.                                     */
+	T_FrameCount
 }T_PacketType;
 
 #pragma pack(push,1)
